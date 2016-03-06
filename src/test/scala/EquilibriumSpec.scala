@@ -1,14 +1,16 @@
 import org.scalatest._
 
-class EquilibriumSpec 
+class EquilibriumSpec
   extends WordSpec
     with ShouldMatchers {
 
   "The Equilibrium of an array" can {
     "when null" should {
       "no indexes should be found" in {
+        // scalastyle:off null
         Equilibrium.findFirst(null) should be (-1)
         Equilibrium.findAll(null) should be ('empty)
+        // scalastyle:on null
       }
     }
     "when empty" should {

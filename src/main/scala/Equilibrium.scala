@@ -18,15 +18,15 @@ import scala.annotation.tailrec
   */
 object Equilibrium {
 
-  /** Finds the first index of an element that holds the equilibrium of this Sequence.*/
+  /** Finds the first index of an element that holds the equilibrium of this Sequence. */
   def findFirst(as: Seq[Int]): Int = Option(as) match {
     case None           => -1
     case Some(Seq())    => -1
-    case Some(xs)       => _findFirst(xs.view.zipWithIndex.toStream, 0, _sum(xs))
+    case Some(xs)       => doFindFirst(xs.view.zipWithIndex.toStream, 0, sum(xs))
   }
 
   /** Adds all elements of a given sequence. */
-  private def _sum(as: Seq[Int]) = as.reduce(_ + _)
+  private def sum(as: Seq[Int]) = as.reduce(_ + _)
 
   /** Returns the first element of the list, `as`, that is in equilibrium.
     *
@@ -35,8 +35,8 @@ object Equilibrium {
     * @param ps Sum of the previous elements of the list, i.e. sum of lower indexes.
     * @param ts Total sum of the elements of the list.
     */
-  @tailrec private def _findFirst(as: Stream[(Int, Int)], ps:Int, ts:Int): Int = as match {
-    case Stream.Empty             => -1 //Empty
+  @tailrec private def doFindFirst(as: Stream[(Int, Int)], ps:Int, ts:Int): Int = as match {
+    case Stream.Empty             => -1 // Empty
 
     case x #:: Stream.Empty       =>
       // Test form Sum of Zero elements eq Zero.
@@ -44,17 +44,19 @@ object Equilibrium {
 
     case x #:: tail               =>
       // Test for Sum of previous elements eq Sum of Next.
-      if (ps == (ts - ps - x._1))
+      if (ps == (ts - ps - x._1)) {
         x._2
-      else
-        _findFirst(tail, ps + x._1, ts)
+      }
+      else {
+        doFindFirst(tail, ps + x._1, ts)
+      }
   }
 
-  /** Finds all indexes that are in equilibrium.*/
+  /** Finds all indexes that are in equilibrium. */
   def findAll(as: Seq[Int]): List[Int] = Option(as) match {
     case None           => Nil
     case Some(Seq())    => Nil
-    case Some(xs)       => _findAll(xs.view.zipWithIndex.toStream, 0, _sum(xs))
+    case Some(xs)       => doFindAll(xs.view.zipWithIndex.toStream, 0, sum(xs))
   }
 
   /** Returns the index of all element of the stream, `as`, that are in equilibrium.
@@ -65,7 +67,7 @@ object Equilibrium {
     * @param ts Total sum of the elements of the list.
     * @param ac List that holds the indexes that were found to be in equilibrium.
     */
-  @tailrec private def _findAll(as: Stream[(Int, Int)], ps:Int, ts:Int, ac: List[Int] = Nil): List[Int] =
+  @tailrec private def doFindAll(as: Stream[(Int, Int)], ps:Int, ts:Int, ac: List[Int] = Nil): List[Int] =
   as match {
     case Stream.Empty             => ac
 
@@ -75,9 +77,11 @@ object Equilibrium {
 
     case x #:: tail               =>
       // Test for Sum of previous elements eq Sum of Next.
-      if (ps == (ts - ps - x._1))
-        _findAll(tail, ps + x._1, ts, x._2 :: ac)
-      else
-        _findAll(tail, ps + x._1, ts, ac)
+      if (ps == (ts - ps - x._1)) {
+        doFindAll(tail, ps + x._1, ts, x._2 :: ac)
+      }
+      else {
+        doFindAll(tail, ps + x._1, ts, ac)
+      }
   }
 }
