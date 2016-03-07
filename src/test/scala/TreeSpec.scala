@@ -1,7 +1,5 @@
 import org.scalatest._
 
-// scalastyle:off null
-
 class TreeSpec
   extends WordSpec
     with ShouldMatchers
@@ -49,22 +47,20 @@ class TreeSpec
 object TreeStub extends TreeLike
 
 object Fixtures {
+  import Tree._
 
-  val singleNode = Tree(8,null, null)
+  val singleNode: BinaryTree[Int] = bnode(8)
 
   val singleNodePath = List(List(singleNode.x))
 
   val treeMaxAmplitud = 8
 
-  val tree = Tree(5,
-      Tree(8,
-        Tree(12, null, null),
-        Tree(2, null, null)),
-      Tree(9,
-        Tree(7,
-          Tree(1, null, null), null),
-        Tree(4,
-          Tree(3, null, null), null)))
+  val tree =
+    bnode(5,
+      bnode(8, bnode(12), bnode(2)),
+      bnode(9,
+        bnode(7, bnode(1)),
+        bnode(4, bnode(3))))
 
   val treePaths = List(
       List(12, 8, 5),
@@ -92,6 +88,4 @@ object Fixtures {
       List(3, 4),
       List(3)
     )
-
 }
-// scalastyle:on null
