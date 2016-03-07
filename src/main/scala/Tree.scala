@@ -4,8 +4,7 @@ case class Tree(x: Int, l: Tree, r: Tree)
 
 // TODO migrate to
 // sealed trait Tree[+A]
-// case class Leaf[A](value: A)
-// case class Branch[A](left: Tree[A], right:Tree[A])
+// case class Node[A](x: A, left: Option[Tree[A]], right: Option[Tree[A]]) extends Tree[A]
 
 trait TreeLike {
 
@@ -23,8 +22,10 @@ trait TreeLike {
                           ac: List[Int] = Nil): List[List[Int]] =
   Option(tree) match {
     case None => Nil
+    // TODO migrate to Some(Node(x, None, None))
     case Some(Tree(x, null,  null)) =>
       (x :: ac) :: Nil
+    // TODO migrate to Some(Node(x, left, right))
     case Some(Tree(x, l, r)) =>
       doFindPaths(l, x :: ac) ++
       doFindPaths(l, Nil)  ++
@@ -36,7 +37,7 @@ trait TreeLike {
     case Nil        => 0
     case x :: Nil   => 0
     case _  =>
-      val (min, max)= minMax(xs)
+      val (min, max) = minMax(xs)
       max - min
   }
 
@@ -46,6 +47,5 @@ trait TreeLike {
     }
 
 }
-
 
 // scalastyle:on null
