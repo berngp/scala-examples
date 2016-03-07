@@ -84,8 +84,8 @@ lazy val coreSettings = Seq(
       "-Ywarn-unused-import",
       "-Yno-adapted-args",
       "-Yrangepos",
-      "-Ywarn-dead-code",
-      "-Ywarn-numeric-widen"
+      "-Ywarn-dead-code"
+      //"-Ywarn-numeric-widen"
     ),
     javacOptions in Compile ++= Seq(
         "-encoding", "UTF-8",
@@ -120,11 +120,11 @@ lazy val compileScalastyle = taskKey[Unit]("compileScalastyle")
 
 lazy val styleSettings = Seq(
   scalastyleFailOnError := true,
-
+  // Scalastyle on Tests
   testScalastyle := org.scalastyle.sbt.ScalastylePlugin.scalastyle.in(Test).toTask("").value,
   (scalastyleConfig in Test) := baseDirectory.value / "scalastyle-test-config.xml",
   (test in Test)    <<= (test in Test)    dependsOn testScalastyle,
-
+  // Scalastyle when compiling.
   compileScalastyle := org.scalastyle.sbt.ScalastylePlugin.scalastyle.in(Compile).toTask("").value,
   // Is running this on compile too much?
   (compile in Test) <<= (compile in Test) dependsOn compileScalastyle
