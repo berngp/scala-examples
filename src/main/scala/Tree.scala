@@ -2,6 +2,10 @@
 
 case class Tree(x: Int, l: Tree, r: Tree)
 
+// TODO migrate to
+// sealed trait Tree[+A]
+// case class Leaf[A](value: A)
+// case class Branch[A](left: Tree[A], right:Tree[A])
 
 trait TreeLike {
 
@@ -31,9 +35,15 @@ trait TreeLike {
   def amplitud (xs: List[Int]): Int = xs.sorted match {
     case Nil        => 0
     case x :: Nil   => 0
-    case x :: tail  => tail.last - x
+    case _  =>
+      val (min, max)= minMax(xs)
+      max - min
   }
 
+  private def minMax(xs: List[Int]) : (Int, Int) =
+    xs.foldLeft((xs(0), xs(0))) {
+      case ((min, max), e) => (math.min(min, e), math.max(max, e))
+    }
 
 }
 
