@@ -33,23 +33,62 @@ case class BinaryTree[A](
 
 trait TreeLike {
 
-  import scala.annotation.tailrec
-
+  /** Calculates the max amplitude of a `Tree[Int]`.
+    * In a binary tree `T`, a path `P` is a non-empty sequence of nodes of tree such that,
+    * each consecutive node in the sequence is a subtree of its preceding node. In the
+    * example tree, the sequences `[9, 8, 2]` and `[5, 8, 12]` are two paths, while `[12, 8, 2]` is not.
+    * The amplitude of path P is the maximum difference among values of nodes on path P.
+    * The amplitude of tree T is the maximum amplitude of all paths in T. When the tree is empty,
+    * it contains no path, and its amplitude is treated as 0.
+    * For example.
+    *
+    *
+    * Input:
+    * {{
+    *          5
+    *        /   \
+    *     8        9
+    *    /  \     /  \
+    * 12   2  8   4
+    *           /    /
+    *         2    5
+    * }}
+    *
+    * Output:
+    * `7`
+    * Explanation:
+    * The paths `[5, 8, 12]` and `[9, 8, 2]` have the maximum amplitude `7`.
+    *
+    */
   def maxApplitud(t: Tree.IntTree): Int =
-    pathsToMaxAmplitud(findPaths(t))
+    doMaxApplitud(t) match {
+      case Nil   => 0
+      case xs@_  => xs.max
+    }
 
-  def pathsToMaxAmplitud(ps: List[List[Int]]): Int =
-    ps.map(amplitud).sorted.last
+  private def doMaxApplitud(t: Tree[Int],
+                            max:Int = Int.MinValue,
+                            min:Int = Int.MaxValue): List[Int] = t match {
+    case NoneTree                          =>
+      List(max - min)
+    case BinaryTree(x, NoneTree, NoneTree) =>
+      doMaxApplitud(NoneTree, math.max(x, max), math.min(x, min))
+    case BinaryTree(x, l, r)               =>
+      doMaxApplitud(l, math.max(x, max), math.min(x, min)) ++
+      doMaxApplitud(r, math.max(x, max), math.min(x, min))
+  }
 
-  def findPaths(tree: Tree.IntTree): List[List[Int]] = doFindPaths(tree)
+  def findPaths(tree: Tree.IntTree): Set[List[Int]] = doFindPaths(tree)
 
   private def doFindPaths(tree: Tree.IntTree,
-                          ac: List[Int] = Nil): List[List[Int]] =
+                          ac: List[Int] = Nil): Set[List[Int]] =
   Option(tree) match {
-    case None => Nil
-    case Some(NoneTree) => Nil
+    case None           =>
+      Set.empty
+    case Some(NoneTree) =>
+      Set.empty
     case Some(BinaryTree(x, NoneTree,  NoneTree)) =>
-      (x :: ac) :: Nil
+      Set(x :: ac)
     case Some(BinaryTree(x, l, r)) =>
       doFindPaths(l, x :: ac) ++
       doFindPaths(l, Nil)     ++

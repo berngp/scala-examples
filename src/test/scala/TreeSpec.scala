@@ -25,7 +25,7 @@ class TreeSpec
 
     "obtain the paths" when {
       "the tree is empty" in {
-        stub.findPaths(null) should equal (Nil)
+        stub.findPaths(null) should equal (Set.empty)
       }
       "the tree has one node" in {
         stub.findPaths(singleNode) should equal (singleNodePath)
@@ -51,7 +51,7 @@ object Fixtures {
 
   val singleNode: BinaryTree[Int] = bnode(8)
 
-  val singleNodePath = List(List(singleNode.x))
+  val singleNodePath = Set(List(singleNode.x))
 
   val treeMaxAmplitud = 8
 
@@ -62,7 +62,7 @@ object Fixtures {
         bnode(7, bnode(1)),
         bnode(4, bnode(3))))
 
-  val treePaths = List(
+  val treePaths = Set(
       List(12, 8, 5),
       List(12),
       List(2, 8, 5),
@@ -70,22 +70,17 @@ object Fixtures {
       List(12, 8),
       List(12),
       List(2, 8),
-      List(2),
       List(1, 7, 9, 5),
       List(1),
       List(1, 7),
-      List(1),
       List(3, 4, 9, 5),
       List(3),
       List(3, 4),
-      List(3),
       List(1, 7, 9),
       List(1),
       List(1, 7),
-      List(1),
       List(3, 4, 9),
       List(3),
-      List(3, 4),
-      List(3)
+      List(3, 4)
     )
 }
