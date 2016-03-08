@@ -25,7 +25,9 @@ class TreeSpec
 
     "obtain the paths" when {
       "the tree is empty" in {
+        // scalastyle:off null
         stub.findPaths(null) should equal (Set.empty)
+        // scalastyle:on null
       }
       "the tree has one node" in {
         stub.findPaths(singleNode) should equal (singleNodePath)

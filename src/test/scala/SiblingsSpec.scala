@@ -2,7 +2,7 @@ import org.scalatest._
 
 class SiblingsSpec
   extends WordSpec
-    with ShouldMatchers 
+    with ShouldMatchers
     with OptionValues {
 
   val stub = SiblingsStub
