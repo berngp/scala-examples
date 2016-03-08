@@ -40,20 +40,14 @@ trait EquilibriumLike {
     * @param ts Total sum of the elements of the list.
     */
   @tailrec private def doFindFirst(as: Stream[(Int, Int)], ps:Int, ts:Int): Int = as match {
-    case Stream.Empty             => -1 // Empty
-
-    case x #:: Stream.Empty       =>
-      // Test form Sum of Zero elements eq Zero.
-      if (ps == 0) x._2 else -1
-
-    case x #:: tail               =>
-      // Test for Sum of previous elements eq Sum of Next.
-      if (ps == (ts - ps - x._1)) {
-        x._2
-      }
-      else {
-        doFindFirst(tail, ps + x._1, ts)
-      }
+    // Empty
+    case Stream.Empty            => -1
+    // Test form Sum of Zero elements eq Zero.
+    case (x,i) #:: Stream.Empty  =>
+      if (ps == 0) i else -1
+    // Test for Sum of previous elements eq Sum of Next.
+    case (x,i) #:: tail          =>
+      if (ps == (ts - ps - x)) i else doFindFirst(tail, ps + x, ts)
   }
 
   /** Finds all indexes that are in equilibrium. */
