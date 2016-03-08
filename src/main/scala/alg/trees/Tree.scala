@@ -1,3 +1,4 @@
+package alg.trees
 
 /** Sealed Trait labels a tree. */
 sealed trait Tree[+A]

@@ -1,3 +1,5 @@
+package alg.trees
+
 import org.scalatest._
 
 class TreeSpec

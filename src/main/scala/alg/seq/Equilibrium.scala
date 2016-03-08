@@ -1,4 +1,8 @@
+package alg.seq
+
 import scala.annotation.tailrec
+
+object Equilibrium extends EquilibriumLike
 
 /** Equilibrium index of an array is an index such that the sum of elements at
   * lower indexes is equal to the sum of elements at higher indexes. For example,
@@ -16,7 +20,7 @@ import scala.annotation.tailrec
   *   assert( a(0) + a(1) + a(2) + a(3) + a(4) + a(5) == 0 )
   * }}
   */
-object Equilibrium {
+trait EquilibriumLike {
 
   /** Finds the first index of an element that holds the equilibrium of this Sequence. */
   def findFirst(as: Seq[Int]): Int = Option(as) match {

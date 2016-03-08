@@ -1,3 +1,5 @@
+package alg.nums
+
 object Siblings extends SiblingsLike
 
 
@@ -13,7 +15,7 @@ trait SiblingsLike {
       Option(asLargestInt(toList(x)))
     }
 
-  final def asLargestInt(xs: List[Int]): Int =
+  private final def asLargestInt(xs: List[Int]): Int =
     doAsLargestInt(xs.sorted.view.zipWithIndex.toStream, 0)
 
   @tailrec private def doAsLargestInt(xs: Stream[(Int, Int)], ac:Int): Int =
