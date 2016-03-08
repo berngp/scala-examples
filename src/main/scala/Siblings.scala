@@ -5,37 +5,24 @@ trait SiblingsLike {
 
   import scala.annotation.tailrec
 
-
-  final def findLargest(x: Int):Option[Int] =  {
+  final def findLargest(x: Int):Option[Int] =
     if (x < 0) {
       None
     }
     else {
       Option(asLargestInt(toList(x)))
     }
-  }
-
 
   final def asLargestInt(xs: List[Int]): Int =
     doAsLargestInt(xs.sorted.view.zipWithIndex.toStream, 0)
 
-
   @tailrec private def doAsLargestInt(xs: Stream[(Int, Int)], ac:Int): Int =
   xs match {
     case Stream.Empty     => ac
-
-    case (x,i) #:: tail if (i == 0) =>
-      doAsLargestInt(tail, ac + x)
-
-    case (x,i) #:: tail if (x == 0) =>
-      doAsLargestInt(tail, ac * pow(i))
-
-    case (x,i) #:: tail =>
-      doAsLargestInt(tail, ac + (pow(i) * x))
+    case (x,i) #:: tail   => doAsLargestInt(tail, ac + (pow(i) * x))
   }
 
   private def pow(i: Int): Int = math.pow(10, i).intValue
-
 
   final def toList(x:Int): List[Int] = doToList(x)
 
