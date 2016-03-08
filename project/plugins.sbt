@@ -4,12 +4,15 @@ addSbtPlugin("com.artima.supersafe" % "sbtplugin" % "1.1.0-RC6")
 
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.5.0")
 
+addSbtPlugin("org.scalariform" % "sbt-scalariform" % "1.6.0")
+
 addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "0.8.0")
 
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.8.2")
 
 // Performance
 addSbtPlugin("com.github.fommil.lion" % "sbt" % "1.0.0")
+
 
 // publishing
 

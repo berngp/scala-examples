@@ -1,3 +1,7 @@
+import scalariform.formatter.preferences._
+import com.typesafe.sbt.SbtScalariform
+
+
 lazy val root = (project in file("."))
                   .settings(mySettings:_*)
                   .settings(name := "scala-examples")
@@ -8,10 +12,27 @@ lazy val root = (project in file("."))
 lazy val mySettings = Seq(organization := "org.github.berngp",
                           scalaVersion := "2.11.7",
                           resolvers ++= extraResolvers,
-                          ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }) ++ universalSettings
+                          ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }) ++universalSettings
 
 
-lazy val universalSettings = coreSettings ++ styleSettings ++ testSettings
+lazy val universalSettings = coreSettings ++ styleSettings ++ testSettings ++ SbtScalariform.scalariformSettings
+
+SbtScalariform.ScalariformKeys.preferences := SbtScalariform.ScalariformKeys.preferences.value
+  .setPreference(AlignParameters, true)
+  .setPreference(AlignSingleLineCaseStatements, true)
+  .setPreference(CompactControlReadability, false)
+  .setPreference(DoubleIndentClassDeclaration, true)
+  .setPreference(FormatXml, true)
+  .setPreference(IndentSpaces, 2)
+  .setPreference(IndentWithTabs, false)
+  .setPreference(MultilineScaladocCommentsStartOnFirstLine, false)
+  .setPreference(PlaceScaladocAsterisksBeneathSecondAsterisk, true)
+  .setPreference(PreserveDanglingCloseParenthesis, true)
+  .setPreference(PreserveSpaceBeforeArguments, true)
+  .setPreference(SpaceBeforeColon, false)
+  .setPreference(SpaceInsideBrackets, false)
+  .setPreference(SpaceInsideParentheses, false)
+  .setPreference(SpacesWithinPatternBinders, true)
 
 // Dependencies versions.
 // Versions {

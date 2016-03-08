@@ -3,7 +3,7 @@ package alg.nums
 import org.scalatest._
 
 class SiblingsSpec
-  extends WordSpec
+    extends WordSpec
     with ShouldMatchers
     with OptionValues {
 
@@ -16,8 +16,8 @@ class SiblingsSpec
         stub.toList(3) should equal (List(3))
       }
       "x is greater than 10" in {
-        stub.toList(100) should equal (List(1,0,0))
-        stub.toList(123) should equal (List(1,2,3))
+        stub.toList(100) should equal (List(1, 0, 0))
+        stub.toList(123) should equal (List(1, 2, 3))
       }
     }
 
@@ -38,6 +38,5 @@ class SiblingsSpec
   }
 
 }
-
 
 object SiblingsStub extends SiblingsLike

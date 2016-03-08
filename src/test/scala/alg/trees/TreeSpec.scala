@@ -3,7 +3,7 @@ package alg.trees
 import org.scalatest._
 
 class TreeSpec
-  extends WordSpec
+    extends WordSpec
     with ShouldMatchers
     with OptionValues {
 
@@ -21,7 +21,7 @@ class TreeSpec
         stub.amplitud(List(10)) should equal(0)
       }
       "the path has n elements" in {
-        stub.amplitud(List(5,9,4,3)) should equal(6)
+        stub.amplitud(List(5, 9, 4, 3)) should equal(6)
       }
     }
 
@@ -47,7 +47,6 @@ class TreeSpec
   }
 }
 
-
 object TreeStub extends TreeLike
 
 object Fixtures {
@@ -60,31 +59,35 @@ object Fixtures {
   val treeMaxAmplitud = 8
 
   val tree =
-    bnode(5,
+    bnode(
+      5,
       bnode(8, bnode(12), bnode(2)),
-      bnode(9,
+      bnode(
+        9,
         bnode(7, bnode(1)),
-        bnode(4, bnode(3))))
+        bnode(4, bnode(3))
+      )
+    )
 
   val treePaths = Set(
-      List(12, 8, 5),
-      List(12),
-      List(2, 8, 5),
-      List(2),
-      List(12, 8),
-      List(12),
-      List(2, 8),
-      List(1, 7, 9, 5),
-      List(1),
-      List(1, 7),
-      List(3, 4, 9, 5),
-      List(3),
-      List(3, 4),
-      List(1, 7, 9),
-      List(1),
-      List(1, 7),
-      List(3, 4, 9),
-      List(3),
-      List(3, 4)
-    )
+    List(12, 8, 5),
+    List(12),
+    List(2, 8, 5),
+    List(2),
+    List(12, 8),
+    List(12),
+    List(2, 8),
+    List(1, 7, 9, 5),
+    List(1),
+    List(1, 7),
+    List(3, 4, 9, 5),
+    List(3),
+    List(3, 4),
+    List(1, 7, 9),
+    List(1),
+    List(1, 7),
+    List(3, 4, 9),
+    List(3),
+    List(3, 4)
+  )
 }

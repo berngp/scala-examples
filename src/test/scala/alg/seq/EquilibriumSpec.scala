@@ -3,7 +3,7 @@ package alg.seq
 import org.scalatest._
 
 class EquilibriumSpec
-  extends WordSpec
+    extends WordSpec
     with ShouldMatchers {
 
   val stub = EquilibriumStub
@@ -25,12 +25,12 @@ class EquilibriumSpec
     }
     "when non-empty" should {
       "return the first index" in {
-        val input = Array(-7,1,5,2,-4,3,0)
+        val input = Array(-7, 1, 5, 2, -4, 3, 0)
         stub.findFirst(input) should be (3)
       }
       "return all indexes" in {
-        val input = Array(-7,1,5,2,-4,3,0)
-        stub.findAll(input) should contain allOf(6, 3)
+        val input = Array(-7, 1, 5, 2, -4, 3, 0)
+        stub.findAll(input) should contain allOf (6, 3)
       }
     }
   }
