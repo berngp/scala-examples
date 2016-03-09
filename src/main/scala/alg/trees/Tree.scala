@@ -22,6 +22,23 @@ object Tree {
     l: Tree[A] = NoneTree,
     r: Tree[A] = NoneTree
   ): BinaryTree[A] = BinaryTree(x, l, r)
+
+  def vInt: TreeLike[Int, Int] = intBinaryTreeVisitor
+  def vLong: TreeLike[Long, Long] = longBinaryTreeVisitor
+  def vDouble: TreeLike[Double, Double] = doubleBinaryTreeVisitor
+
+  private abstract class NumericTreeLike[T] extends TreeLike[T, T]
+
+  private object intBinaryTreeVisitor extends NumericTreeLike[Int] {
+    protected def diff(a: Int, b: Int): Int = a - b
+  }
+  private object doubleBinaryTreeVisitor extends NumericTreeLike[Double] {
+    protected def diff(a: Double, b: Double): Double = a - b
+  }
+  private object longBinaryTreeVisitor extends NumericTreeLike[Long] {
+    protected def diff(a: Long, b: Long): Long = a - b
+  }
+
 }
 
 /** Case object that represents an non-existent value. */
@@ -34,62 +51,109 @@ case class BinaryTree[A](
   right: Tree[A] = NoneTree
 ) extends Tree[A]
 
-trait TreeLike {
+trait TreeLike[A, N] { self =>
+
+  def size(tree: Tree[A]): Int = ???
+
+  def max(t: Tree[A])(implicit ord: Ordering[A]): A = ???
+
+  def depth: (Int, List[A]) = ???
+
+  def map[B](f: (A) => B): Tree[B] = ???
+
+  protected def diff(a: A, b: A): N
 
   /**
     * Calculates the max amplitude of a `Tree[Int]`.
     * In a binary tree `T`, a path `P` is a non-empty sequence of nodes of tree such that,
     * each consecutive node in the sequence is a subtree of its preceding node. In the
-    * example tree, the sequences `[9, 8, 2]` and `[5, 8, 12]` are two paths, while `[12, 8, 2]` is not.
+    * example tree, the sequences `[9, 7, 1]` and `[5, 8, 12]` are two paths, while `[12, 8, 2]` is not.
     * The amplitude of path P is the maximum difference among values of nodes on path P.
     * The amplitude of tree T is the maximum amplitude of all paths in T. When the tree is empty,
     * it contains no path, and its amplitude is treated as 0.
     * For example.
     *
     *
-    * Input:
+    * Input where the Tree is an Tree[Int]:
     * {{
     *          5
     *        /   \
     *     8        9
     *    /  \     /  \
-    * 12   2  8   4
+    * 12    2    7   4
     *           /    /
-    *         2    5
+    *         1    3
     * }}
     *
     * Output:
-    * `7`
+    * `8`
     * Explanation:
-    * The paths `[5, 8, 12]` and `[9, 8, 2]` have the maximum amplitude `7`.
+    * The paths `[5, 8, 12]` has `7` but the path `[9, 7, 1]` has the maximum amplitude of `8`.
     *
     */
-  def maxApplitud(t: Tree.IntTree): Int =
-    doMaxApplitud(t) match {
-      case Nil    => 0
-      case xs @ _ => xs.max
+  def maxApplitud(tree: Tree[A])(implicit ordA: Ordering[A], ordN: Ordering[N]): Option[N] =
+    Option(tree) match {
+      case None => None
+      case Some(t) =>
+        amplituds(t) match {
+          case Nil    => None
+          case xs @ _ => Some(xs.max)
+        }
     }
 
-  private def doMaxApplitud(
-    t:   Tree[Int],
-    max: Int       = Int.MinValue,
-    min: Int       = Int.MaxValue
-  ): List[Int] = t match {
+  private def amplituds(
+    t:   Tree[A],
+    max: Option[A] = None,
+    min: Option[A] = None
+  )(implicit ord: Ordering[A]): List[N] = t match {
     case NoneTree =>
-      List(max - min)
+      if (max.isDefined && min.isDefined) List(diff(max.get, min.get)) else Nil
     case BinaryTree(x, NoneTree, NoneTree) =>
-      doMaxApplitud(NoneTree, math.max(x, max), math.min(x, min))
+      amplituds(NoneTree, fmax(x, max), fmin(x, min))
     case BinaryTree(x, l, r) =>
-      doMaxApplitud(l, math.max(x, max), math.min(x, min)) ++
-        doMaxApplitud(r, math.max(x, max), math.min(x, min))
+      amplituds(l, fmax(x, max), fmin(x, min)) ++ amplituds(r, fmax(x, max), fmin(x, min))
   }
 
-  def findPaths(tree: Tree.IntTree): Set[List[Int]] = doFindPaths(tree)
+  private def fmin[B >: A](a: A, b: Option[A])(implicit ord: Ordering[B]): Option[A] = b map { x =>
+    if (ord.compare(a, x) <= 0) a else x
+  } orElse Some(a)
+
+  private def fmax[B >: A](a: A, b: Option[A])(implicit ord: Ordering[B]): Option[A] = b map { x =>
+    if (ord.compare(a, x) >= 0) a else x
+  } orElse Some(a)
+
+  /**
+    * Generates a set with the paths and sub paths of the given tree.
+    * A path `P` is a non-empty sequence of nodes of the tree such that,
+    * each consecutive node in the sequence is a subtree of its preceding node. In the
+    * example tree, the sequences `[9, 8, 2]` and `[5, 8, 12]` are two paths, while `[12, 8, 2]` is not.
+    * For example.
+    *
+    * Input where the Tree is an Tree[Int]:
+    * {{
+    *          5
+    *        /   \
+    *     8        9
+    *    /  \     /  \
+    * 12     2   7   4
+    *           /    /
+    *          1    3
+    * }}
+    *
+    * The paths are:
+    * {{
+    *     Set(List(12, 8, 5),   List(12, 8),
+    *         List(2, 8, 5),    List(2, 8),
+    *         List(1, 7, 9, 5), List(1, 7, 9), List(1, 7),
+    *         List(3, 4, 9, 5), List(3, 4, 9), List(3, 4))
+    * }}
+    */
+  def findPaths(tree: Tree[A]): Set[List[A]] = doFindPaths(tree)
 
   private def doFindPaths(
-    tree: Tree.IntTree,
-    ac:   List[Int]    = Nil
-  ): Set[List[Int]] =
+    tree: Tree[A],
+    ac:   List[A] = Nil
+  ): Set[List[A]] =
     Option(tree) match {
       case None =>
         Set.empty
@@ -99,21 +163,8 @@ trait TreeLike {
         Set(x :: ac)
       case Some(BinaryTree(x, l, r)) =>
         doFindPaths(l, x :: ac) ++
-          doFindPaths(l, Nil) ++
+          doFindPaths(l, x :: Nil) ++
           doFindPaths(r, x :: ac) ++
-          doFindPaths(r, Nil)
-    }
-
-  def amplitud(xs: List[Int]): Int = xs.sorted match {
-    case Nil      => 0
-    case x :: Nil => 0
-    case _ =>
-      val (min, max) = minMax(xs)
-      max - min
-  }
-
-  private def minMax(xs: List[Int]): (Int, Int) =
-    xs.foldLeft((xs(0), xs(0))) {
-      case ((min, max), e) => (math.min(min, e), math.max(max, e))
+          doFindPaths(r, x :: Nil)
     }
 }

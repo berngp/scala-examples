@@ -7,26 +7,14 @@ class TreeSpec
     with ShouldMatchers
     with OptionValues {
 
-  import Fixtures._
+  import TreeSpecFixtures._
 
-  val stub = TreeStub
+  val stub = Tree.vInt
 
   "The Tree" can {
 
-    "obtain the amplitud of a path" when {
-      "the path is empty" in {
-        stub.amplitud(Nil) should equal (0)
-      }
-      "the path has one element" in {
-        stub.amplitud(List(10)) should equal(0)
-      }
-      "the path has n elements" in {
-        stub.amplitud(List(5, 9, 4, 3)) should equal(6)
-      }
-    }
-
     "obtain the paths" when {
-      "the tree is empty" in {
+      "the tree is null" in {
         // scalastyle:off null
         stub.findPaths(null) should equal (Set.empty)
         // scalastyle:on null
@@ -40,16 +28,19 @@ class TreeSpec
     }
 
     "obtain the max applitud" when {
+      "the tree is null" in {
+        // scalastyle:off null
+        stub.maxApplitud(null) should be(empty)
+        // scalastyle:on null
+      }
       "the tree has multiple nodes" in {
-        stub.maxApplitud(tree) should be(treeMaxAmplitud)
+        stub.maxApplitud(tree).value should be(treeMaxAmplitud)
       }
     }
   }
 }
 
-object TreeStub extends TreeLike
-
-object Fixtures {
+object TreeSpecFixtures {
   import Tree._
 
   val singleNode: BinaryTree[Int] = bnode(8)
@@ -71,23 +62,16 @@ object Fixtures {
 
   val treePaths = Set(
     List(12, 8, 5),
-    List(12),
-    List(2, 8, 5),
-    List(2),
     List(12, 8),
-    List(12),
+    List(2, 8, 5),
     List(2, 8),
     List(1, 7, 9, 5),
-    List(1),
     List(1, 7),
     List(3, 4, 9, 5),
-    List(3),
     List(3, 4),
     List(1, 7, 9),
-    List(1),
     List(1, 7),
     List(3, 4, 9),
-    List(3),
     List(3, 4)
   )
 }
