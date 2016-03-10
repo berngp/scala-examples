@@ -12,18 +12,45 @@ class TreeSpec
   val stub = Tree.vInt
 
   "The Tree" can {
+    "be mapped " when {
+      "the tree is null" in {
+        // scalastyle:off null
+        stub.map(null)(x => x) should be(NoneTree)
+        // scalastyle:on null
+      }
+      "the tree has one node" in {
+        stub.map(singleNode)(_ * 2).get should be(singleNode.get * 2)
+      }
+      "the tree has multiple nodes" in {
+        stub.paths(tree) should equal (treePaths)
+      }
+    }
 
     "obtain the paths" when {
       "the tree is null" in {
         // scalastyle:off null
-        stub.findPaths(null) should equal (Set.empty)
+        stub.paths(null) should equal (Set.empty)
         // scalastyle:on null
       }
       "the tree has one node" in {
-        stub.findPaths(singleNode) should equal (singleNodePath)
+        stub.paths(singleNode) should equal (singleNodePath)
       }
       "the tree has multiple nodes" in {
-        stub.findPaths(tree) should equal (treePaths)
+        stub.paths(tree) should equal (treePaths)
+      }
+    }
+
+    "obtain the root-paths" when {
+      "the tree is null" in {
+        // scalastyle:off null
+        stub.rootPaths(null) should equal (Set.empty)
+        // scalastyle:on null
+      }
+      "the tree has one node" in {
+        stub.rootPaths(singleNode) should equal (singleNodePath)
+      }
+      "the tree has multiple nodes" in {
+        stub.rootPaths(tree) should equal (treeRootPaths)
       }
     }
 
@@ -37,6 +64,34 @@ class TreeSpec
         stub.maxApplitud(tree).value should be(treeMaxAmplitud)
       }
     }
+
+    "obtain the max value in a tree" when {
+      "the tree is null" in {
+        // scalastyle:off null
+        stub.max(null) should be(empty)
+        // scalastyle:on null
+      }
+      "the tree has one node" in {
+        stub.max(singleNode).value should be(singleNode.get)
+      }
+      "the tree has multiple nodes" in {
+        stub.max(tree).value should be(treeMaxValue)
+      }
+    }
+
+    "obtain the size of a tree" when {
+      "the tree is null" in {
+        // scalastyle:off null
+        stub.size(null) should be(0)
+        // scalastyle:on null
+      }
+      "the tree has one node" in {
+        stub.size(singleNode) should be(1)
+      }
+      "the tree has multiple nodes" in {
+        stub.size(tree) should be(treeSize)
+      }
+    }
   }
 }
 
@@ -45,9 +100,13 @@ object TreeSpecFixtures {
 
   val singleNode: BinaryTree[Int] = bnode(8)
 
-  val singleNodePath = Set(List(singleNode.x))
+  val singleNodePath = Set(List(singleNode.v))
 
   val treeMaxAmplitud = 8
+
+  val treeMaxValue = 12
+
+  val treeSize = 9
 
   val tree =
     bnode(
@@ -59,6 +118,13 @@ object TreeSpecFixtures {
         bnode(4, bnode(3))
       )
     )
+
+  val treeRootPaths = Set(
+    List(12, 8, 5),
+    List(2, 8, 5),
+    List(1, 7, 9, 5),
+    List(3, 4, 9, 5)
+  )
 
   val treePaths = Set(
     List(12, 8, 5),
